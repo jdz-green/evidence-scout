@@ -1,0 +1,8 @@
+$ env -u NO_PROXY -u no_proxy python agent.py "https://www.bern.ch/.../stimmbeteiligung"
+openminion: The page states:
+1. "Bis am Donnerstagabend, 26. November 2026, sind 33'219 briefliche Stimmabgaben eingegangen."
+   (33,219 postal votes counted by November 26, 2026).
+2. "Das entspricht einer Stimmbeteiligung von 36,8 Prozent. Die Stadt Bern hat 90'190
+   stimmberechtigte Personen." (36.8% turnout among 90,190 eligible voters).
+These establish the current voter participation rate and total eligible voters in Bern as of
+November 26, 2026.
