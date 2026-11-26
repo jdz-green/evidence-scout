@@ -8,6 +8,10 @@ deterministic part (HTTP, HTML stripping, truncation) is a registered tool; the 
 sentences carry the number, and what they do not say) is the model's job. An 8B local model can do the
 second and should not be asked to imitate the first.
 
+## Demo
+
+A 29-second walkthrough: https://youtu.be/FlpedyFJ7Nw
+
 ## Run
 
 ```console
