@@ -1,0 +1,20 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # The gate is the part that must never regress; it has no SDK dependency, so it runs
+      # without installing OpenMinion (which pulls a large tree and needs a model to be useful).
+      - name: gate tests
+        run: python tests/test_gate.py
+      - name: agent compiles
+        run: python -m py_compile agent.py

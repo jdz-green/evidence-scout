@@ -17,6 +17,8 @@ import sys
 
 import httpx
 from openminion.api import Agent
+
+from gate import has_checkable_fact
 from openminion.tools.decorator import tool
 
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) Chrome/131"}
@@ -53,7 +55,7 @@ def main() -> int:
     # Deterministic gate: an 8B model will happily write an analysis of a page with no numbers at all.
     # If the text carries no digit, there is no dated or numbered fact to quote, so say so and stop
     # rather than paying for a summary that cannot be evidence.
-    if not re.search(r"\d", page):
+    if not has_checkable_fact(page):
         print("NO CHECKABLE FACT (deterministic check: the page contains no digits)")
         return 0
     agent = Agent(
