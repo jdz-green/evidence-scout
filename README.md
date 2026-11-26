@@ -1,3 +1,5 @@
+![test](https://github.com/jdz-green/evidence-scout/actions/workflows/test.yml/badge.svg)
+
 # Evidence Scout — a small OpenMinion agent
 
 Turns one URL into a dated evidence note: two quoted facts with their exact numbers, plus one line saying
