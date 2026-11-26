@@ -25,6 +25,12 @@ November 26, 2026.
 `env -u NO_PROXY -u no_proxy` is not cosmetic: without it every provider call fails before it is made.
 See `BUGS.md`.
 
+## A gate before the model
+
+`agent.py` refuses to call the model when the fetched text contains no digit: that page cannot carry a
+dated or numbered fact, so the honest output is `NO CHECKABLE FACT`, not a summary. This also removes the
+brain layer's most common refusal (see BUGS.md #5), which is not deterministic.
+
 ## Two runs, two pages
 
 | page | what the agent returned |

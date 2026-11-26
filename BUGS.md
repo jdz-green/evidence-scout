@@ -58,3 +58,27 @@ ownership.
 Not OpenMinion, but recorded while working in the same session: Gno's `addpkg` fee must be denominated in
 `ugnot`, and the package needs ~20.7M gas; a `gnot` fee fails as "insufficient funds" against a zero
 `gnot` balance even when the account holds 100 GNOT.
+
+## 5. The brain layer sometimes refuses a task the model can do
+
+**Symptom.** The same agent, same model, same page text produced a correct two-fact note on one run and
+this on the next:
+
+```
+openminion: I couldn't provide a grounded current general answer because Missing live-data evidence for
+a freshness-sensitive answer.. Please retry with live data available so I can answer with sources and an
+exact date.
+```
+
+The page text was already in the prompt; no live fetch was missing.
+
+**Impact.** For a tool-shaped agent this is the difference between a usable note and no output, and the
+failure is not deterministic — it depends on how the brain layer classifies the turn.
+
+**Workaround in this repo.** `agent.py` runs a deterministic gate before the model: if the fetched text
+contains no digit, it prints `NO CHECKABLE FACT` and stops instead of asking a model to summarise a page
+that cannot contain evidence. That removes the worst class of refusal (pages with nothing to quote) and
+leaves the model only the case it is good at.
+
+**Suggestion.** Let a caller declare a turn as "extraction over supplied text" so the freshness/grounding
+policy does not apply, or return the brain's classification so the caller can branch on it.

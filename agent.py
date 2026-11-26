@@ -38,7 +38,8 @@ INSTRUCTIONS = (
     "You are a text extraction tool, not an analyst. The user gives you the text of one page. Copy the "
     "two most checkable sentences from that text, each with the numbers or dates exactly as printed, and "
     "add one short line saying what they establish. Never answer questions about the world; only report "
-    "what the given text says. Output plain text, under 90 words."
+    "what the given text says. If the text contains no sentence with a number, date or other checkable "
+    "claim, output exactly: NO CHECKABLE FACT — and nothing else. Output plain text, under 90 words."
 )
 
 
@@ -49,6 +50,12 @@ def main() -> int:
     url = sys.argv[1]
     question = sys.argv[2] if len(sys.argv) > 2 else "What does this page establish that a forecaster could use?"
     page = fetch_text(url)
+    # Deterministic gate: an 8B model will happily write an analysis of a page with no numbers at all.
+    # If the text carries no digit, there is no dated or numbered fact to quote, so say so and stop
+    # rather than paying for a summary that cannot be evidence.
+    if not re.search(r"\d", page):
+        print("NO CHECKABLE FACT (deterministic check: the page contains no digits)")
+        return 0
     agent = Agent(
         config_path="/proj/money/.openminion/agents.json",
         model="qwen3:8b",
