@@ -82,3 +82,21 @@ leaves the model only the case it is good at.
 
 **Suggestion.** Let a caller declare a turn as "extraction over supplied text" so the freshness/grounding
 policy does not apply, or return the brain's classification so the caller can branch on it.
+
+## 6. The refusal in #5 is sticky per session — pinning a session id fixes it
+
+**Symptom.** After a run that produced the "Missing live-data evidence" refusal, later runs of the same
+agent against the same page kept producing it, even though the page text was supplied in the prompt.
+
+**Workaround.** Pass an explicit `session_id` to `Agent(...)` (the default session appears to accumulate
+the classifier's state across turns):
+
+```python
+agent = Agent(config_path="...", model="qwen3:8b", instructions=..., tools=[fetch_text],
+              session_id="evidence-scout")
+```
+
+With a pinned id, the same page and prompt returned a correct two-fact note on the next run.
+
+**Suggestion.** Either document that the default session carries brain state across calls, or reset the
+brain state when the caller does not reuse a session on purpose.

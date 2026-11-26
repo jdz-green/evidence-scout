@@ -10,6 +10,16 @@ deterministic part (HTTP, HTML stripping, truncation) is a registered tool; the 
 sentences carry the number, and what they do not say) is the model's job. An 8B local model can do the
 second and should not be asked to imitate the first.
 
+## A note file, not just a chat reply
+
+```console
+$ env -u NO_PROXY -u no_proxy python agent.py <url> --note demo/zurich-note.txt
+```
+
+The note file is shaped like the evidence notes used for Delphi: the URL, the retrieval date, the two
+quoted facts, and the caveat. The agent pins `session_id="evidence-scout"` because the default session
+carries brain state that makes later runs refuse (see BUGS.md #6).
+
 ## Demo
 
 A 29-second walkthrough: https://youtu.be/FlpedyFJ7Nw

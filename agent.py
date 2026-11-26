@@ -2,7 +2,10 @@
 """Evidence Scout — a small OpenMinion agent that turns a URL into a dated evidence note.
 
 Usage:
-  env -u NO_PROXY -u no_proxy /proj/money/.venv/bin/python agent.py <url> ["question"]
+  env -u NO_PROXY -u no_proxy /proj/money/.venv/bin/python agent.py <url> [question] [--note out.txt]
+
+With --note the agent writes what it found into a note file shaped like the ones used for Delphi
+evidence: title line, source and retrieval date, the two quoted facts, and a closing caveat.
 
 The agent has one tool, `fetch_text`, which does the deterministic part (HTTP + HTML stripping +
 truncation). The model does the part that is actually a language task: pick the sentences that carry a
@@ -46,11 +49,17 @@ INSTRUCTIONS = (
 
 
 def main() -> int:
-    if len(sys.argv) < 2:
+    args = sys.argv[1:]
+    note_path = None
+    if "--note" in args:
+        i = args.index("--note")
+        note_path = args[i + 1]
+        args = args[:i] + args[i + 2:]
+    if not args:
         print(__doc__)
         return 1
-    url = sys.argv[1]
-    question = sys.argv[2] if len(sys.argv) > 2 else "What does this page establish that a forecaster could use?"
+    url = args[0]
+    question = args[1] if len(args) > 1 else "What does this page establish that a forecaster could use?"
     page = fetch_text(url)
     # Deterministic gate: an 8B model will happily write an analysis of a page with no numbers at all.
     # If the text carries no digit, there is no dated or numbered fact to quote, so say so and stop
@@ -63,9 +72,21 @@ def main() -> int:
         model="qwen3:8b",
         instructions=INSTRUCTIONS,
         tools=[fetch_text],
+        session_id="evidence-scout",
     )
     result = agent.run(f"Question: {question}\nURL: {url}\n\nPage text:\n{page}")
-    print(result.text)
+    text = result.text
+    print(text)
+    if note_path:
+        from datetime import date
+        body = (
+            f"{url}\n\n"
+            f"Read on {date.today().isoformat()} from {url}.\n\n"
+            f"{text.strip()}\n"
+        )
+        with open(note_path, "w") as fh:
+            fh.write(body)
+        print(f"\nnote written to {note_path} ({len(body)} chars)")
     return 0
 
 
