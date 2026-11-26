@@ -25,6 +25,17 @@ November 26, 2026.
 `env -u NO_PROXY -u no_proxy` is not cosmetic: without it every provider call fails before it is made.
 See `BUGS.md`.
 
+## Two runs, two pages
+
+| page | what the agent returned |
+|---|---|
+| bern.ch interim turnout | 33,219 postal ballots by 26 Nov 2026 = 36.8% of 90,190 voters |
+| stadt-zuerich.ch interim turnout | 42.3% postal share, final turnout only after the count |
+
+The second run also shows the model's limit: it attached "as of 29 November" (the vote date) to the 42.3%
+figure, which the page does not say. That is the kind of error a human has to catch before the note is
+sent, and it is why the agent's output is a draft, not a submission.
+
 ## OpenMinion building blocks exercised
 
 | Block | How |

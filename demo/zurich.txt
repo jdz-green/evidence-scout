@@ -1,0 +1,5 @@
+$ env -u NO_PROXY -u no_proxy python agent.py "https://www.stadt-zuerich.ch/de/aktuell/news/2026/stimmbeteiligung.html"
+openminion: The page establishes two key points for a forecaster:
+1. **42.3%** turnout for postal voting as of **29. November 2026**, based on processed mail-in ballots.
+2. Final turnout figures, including in-person votes, will only be available after the official count on the
+   election day.
